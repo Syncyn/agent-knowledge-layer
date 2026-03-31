@@ -7,6 +7,24 @@
   Instructions here directly change how agents behave — what they check before coding,
   what conventions they follow, and what they must not do.
 
+  WHERE THIS FILE LIVES — WORKSPACE ROOT CONVENTION:
+  This file belongs at the *workspace root* — the directory you invoke your AI agent from.
+
+  For a single-repo project:   workspace root = repo root (standard)
+  For a multi-repo workspace:  workspace root = the parent directory that contains all
+                                your service repos side by side, e.g.:
+                                  ~/workspace/
+                                  ├── CLAUDE.md          ← this file lives here
+                                  ├── api-service/
+                                  ├── worker-service/
+                                  ├── frontend/
+                                  └── docs/              ← or docs live as a sibling repo
+
+  Claude Code reads CLAUDE.md from wherever it is invoked. Placing it at the workspace
+  root means agents always see it regardless of which individual repo they happen to be
+  editing. This is the correct mental model: agents work across your entire workspace,
+  not inside individual service repos.
+
   HOW TO USE THIS TEMPLATE:
   Replace all [PLACEHOLDERS] with your project's specifics.
   Keep the comments — they help future maintainers understand why each section exists.
@@ -31,23 +49,31 @@
 
 ---
 
-## Monorepo Layout
+## Workspace Layout
 
 <!--
-  Provide a summary of your project's top-level structure here.
+  List every repo / top-level directory in your workspace here.
   This supplements REPO_NAVIGATION.md — that file has the full annotated tree,
   this section gives agents a 10-second orientation.
+
+  For a monorepo, these are subdirectories of the repo root.
+  For a multi-repo workspace, these are the repos checked out side by side under
+  a common parent directory (which is where this CLAUDE.md lives).
+  Either way, agents use this section instead of running ls/find at the workspace root.
+
   Update this when the top-level structure changes significantly.
 -->
 
 ```
-[YOUR_PROJECT_NAME]/
+[workspace-root]/
+├── CLAUDE.md            ← this file — read by agents on every session start
 ├── [service-a]/         [Language] — [one-line responsibility]
 ├── [service-b]/         [Language] — [one-line responsibility]
 ├── [service-c]/         [Language] — [one-line responsibility]
 ├── [shared-library]/    [Language] library (not deployed) — [shared utilities]
 ├── [client-app]/        [Framework] client — [web/mobile/desktop]
 ├── docs/                Documentation hub — architecture, design, ADRs, runbooks
+│                        (can also be a sibling git repo, e.g. "your-project-docs/")
 └── [other-tooling]/     [description]
 ```
 
@@ -152,6 +178,7 @@ For the current infrastructure state see `docs/REPO_STATE.md`. The map below des
 | `docs/api/` | HTTP endpoint references |
 | `docs/services/` | Per-service overview docs |
 | `docs/adr/` | Architectural Decision Records (immutable) |
+| `docs/agents/` | Agent capability definitions — what each agent type does, when to use it, how to invoke it in implementation plans |
 | `docs/implementation-plans/` | Multi-task plans with assigned agents |
 | `docs/research/` | Technology/API/legal investigations |
 | `docs/runbooks/` | Operational procedures |

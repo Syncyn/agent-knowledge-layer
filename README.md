@@ -40,10 +40,10 @@ Every document in this system is written for two readers simultaneously:
 ## Directory structure
 
 ```
-agent-docs-template/
+agent-knowledge-layer/
 ├── README.md                         # This file
-├── SETUP.md                          # Step-by-step adoption guide
-├── CLAUDE.md                         # Drop into your repo root to instruct agents
+├── SETUP.md                          # Step-by-step adoption guide (+ setup scripts)
+├── CLAUDE.md                         # Drop into your workspace root to instruct agents
 ├── docs/
 │   ├── INDEX.md                      # Single entry point — every doc linked here
 │   ├── REPO_NAVIGATION.md            # Complete directory tree for agent orientation
@@ -51,11 +51,16 @@ agent-docs-template/
 │   ├── architecture/                 # System topology, data flows, cross-cutting concerns
 │   ├── design/                       # Feature design docs (pre/during implementation)
 │   ├── adr/                          # Architectural Decision Records (immutable)
+│   ├── agents/                       # Agent capability definitions and roster
 │   ├── implementation-plans/         # Multi-agent task plans with acceptance criteria
 │   ├── api/                          # HTTP endpoint references
 │   ├── services/                     # Per-service overviews
 │   ├── runbooks/                     # Operational procedures
 │   └── research/                     # Technology and vendor investigations
+├── scripts/
+│   ├── setup.sh                      # Automated setup for macOS / Linux
+│   ├── setup.ps1                     # Automated setup for Windows (PowerShell)
+│   └── README.md                     # Script usage notes
 ├── mcp-server/
 │   ├── README.md                     # How to build a knowledge MCP server for your repo
 │   └── example-tools.md              # Tool designs and why each one matters
@@ -66,7 +71,7 @@ agent-docs-template/
 
 ### What each part does
 
-**`CLAUDE.md` (root)** — The single most important file. This is what you drop into your repository root and it immediately changes how Claude Code agents behave. It tells agents where to look before starting work, what conventions to follow, and how the system is structured. See the template `CLAUDE.md` in this repo — it is extensively commented.
+**`CLAUDE.md` (workspace root)** — The single most important file. Drop this into your *workspace root* — the directory you invoke your AI agent from. For a single-repo project, that's the repo root. For a multi-repo setup (several service repos side by side), it's the parent directory that contains all of them. Claude Code reads `CLAUDE.md` from wherever it is invoked, so placing it at the workspace root means agents always see it regardless of which individual service repo they're editing. See the template `CLAUDE.md` in this repo — it is extensively commented.
 
 **`docs/INDEX.md`** — The agent's entry point. Before starting any task, an agent should check the index to find relevant docs. Every document in the repo is listed here with a one-line description. This prevents agents from creating duplicate documents and gives them an immediate map of available knowledge.
 
@@ -80,7 +85,9 @@ agent-docs-template/
 
 **`docs/adr/`** — Architectural Decision Records. Immutable records of significant decisions: what was decided, why, what alternatives were considered, and what the consequences are. This is the most agent-impactful document type — agents that know WHY a decision was made don't accidentally undo it.
 
-**`docs/implementation-plans/`** — Structured multi-task plans with step-by-step instructions, assigned agent types, effort estimates, and acceptance criteria. These allow multiple agents to work on different parts of a feature without coordination overhead.
+**`docs/agents/`** — Agent capability definitions: what each agent type is good at, when to invoke it, what context it needs, and how to reference it in implementation plans. This is the roster your implementation plans draw from. Without it, task assignment in plans is ambiguous and agents assigned to wrong tasks produce poor results.
+
+**`docs/implementation-plans/`** — Structured multi-task plans with step-by-step instructions, assigned agent types, effort estimates, and acceptance criteria. These allow multiple agents to work on different parts of a feature without coordination overhead. Each task's `Assignee` field references an agent defined in `docs/agents/`.
 
 **`docs/api/`** — HTTP endpoint references with request/response schemas. Agents read these to understand the API surface before writing client code or adding new endpoints.
 
@@ -105,11 +112,13 @@ Adopt this system in an existing project in under an hour:
 cp -r agent-docs-template/docs your-project/docs
 ```
 
-**2. Drop in CLAUDE.md**
+**2. Drop in CLAUDE.md at the workspace root**
 ```bash
-cp agent-docs-template/CLAUDE.md your-project/CLAUDE.md
+cp agent-knowledge-layer/CLAUDE.md ~/workspace/CLAUDE.md   # multi-repo
+# or
+cp agent-knowledge-layer/CLAUDE.md your-project/CLAUDE.md  # single repo
 ```
-Edit the paths and service names to match your project. The comments in the file explain each section.
+Edit the paths and service names to match your project. The comments in the file explain each section. The key: place it wherever you invoke `claude` (or your agent tool) from — that directory is your workspace root.
 
 **3. Fill in REPO_NAVIGATION.md**
 Run `tree` or `ls -R` once, paste the output into `docs/REPO_NAVIGATION.md`, then annotate it. From this point on, agents read this file instead of running tree commands.

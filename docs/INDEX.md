@@ -83,9 +83,20 @@ Feature and system design documents written before or during implementation.
 
 ---
 
+## Agent Definitions
+
+Capability definitions for each agent type used in implementation plans — domain, triggers, required context, and invocation notes.
+
+| Document | Description |
+|---|---|
+| [agents/example-backend-engineer.md](./agents/example-backend-engineer.md) | backend-engineer: server-side features, API endpoints, database layers, service integrations |
+| [agents/README.md](./agents/README.md) | Directory guide: what belongs here, relationship to implementation plans |
+
+---
+
 ## Implementation Plans
 
-Multi-agent task plans with acceptance criteria.
+Multi-agent task plans with acceptance criteria. Each task's `Assignee:` field references an agent defined in `docs/agents/`.
 
 | Document | Description |
 |---|---|
