@@ -214,3 +214,9 @@ For the current infrastructure state see `docs/REPO_STATE.md`. The map below des
 | [Feature or refactor 2] | In progress |
 | [Feature or refactor 3] | Pending |
 | [Feature or refactor 4] | Pending |
+
+---
+
+## Tracking work
+
+Work items, bugs, progress and priority live in GitHub, not in syncyn-docs (`syncyn-docs/adr/0011-workflow-tracking-in-github-projects.md`). Each unit of work is an issue in the repo that does the work, on the org project [Syncyn Roadmap](https://github.com/orgs/Syncyn/projects/1), with Stage (Planned, Design, In progress, Merged, On staging, In production, Verified) and Priority (P0 to P3). Reference the issue in the PR (`Closes Syncyn/<repo>#N`), and move its Stage when the work merges, deploys or is verified live. Don't record progress in syncyn-docs plans or designs. Cloud agent sessions can't edit board fields, so use the matching issue labels instead; they sync with the board every hour (`stage:*`, `priority:P0` to `priority:P3`, `blocked:kev`, `blocked:vlad`, `blocked:kev+vlad`, `blocked:external`; see syncyn-docs `CONTRIBUTING.md`). If you can't continue without Kev or Vlad (a decision, access, credentials or review), add the matching `blocked:*` label (or set the board's **Blocked on** field), leave one issue comment saying exactly what's needed, and stop. When the label is removed, the issue can be picked up again.
